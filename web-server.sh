@@ -40,7 +40,7 @@ backend(){
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
-    (yarn start)
+    screen yarn start
     cd -
     frontend
 }
