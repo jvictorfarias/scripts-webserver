@@ -57,6 +57,7 @@ postgres(){
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' -y
     sudo apt update && sudo apt-get install postgresql postgresql-contrib -y
     sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password '$POSTGRES_PASSWORD';"
+    node
 }
 
 node(){
@@ -76,6 +77,7 @@ gitFunction(){
     sudo apt install git -y
     git clone $GIT_URL
     APP_FOLDER=`echo $GIT_URL | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1`
+    postgres
 }
 
 
