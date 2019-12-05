@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGE_MANAGER=
+
 POSTGRES_PASSWORD=
 BACKEND_FOLDER=
 FRONTEND_FOLDER=
@@ -64,7 +64,6 @@ backend(){
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
-    sudo nohup `sudo yarn start` &
     cd -
     frontend
 }
@@ -81,13 +80,19 @@ mongoFunction(){
 frontend(){
     cd ~/$APP_FOLDER/frontend/$FRONTEND_FOLDER
     yarn install
-    yarn start
     cd -
+    start
 }
 
 
 
-
+start(){
+    cd ~/$APP_FOLDER/$BACKEND_FOLDER
+    sudo nohup `sudo yarn start` &
+    cd ~/$APP_FOLDER/frontend/$FRONTEND_FOLDER
+    sudo yarn start
+    
+}
 
 init
 
