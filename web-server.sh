@@ -22,6 +22,8 @@ menu(){
 init(){
     cd ~
     sudo apt update && sudo apt upgrade -y
+    sudo apt install dialog
+    
     menu
 }
 
