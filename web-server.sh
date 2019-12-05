@@ -35,7 +35,7 @@ frontend(){
 }
 
 backend(){
-    cd $BACKEND_FOLDER
+    cd ~/$APP_FOLDER/$BACKEND_FOLDER
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
@@ -45,7 +45,7 @@ backend(){
 }
 
 # In case of mongo
-mongo(){
+mongoFunction(){
     cd $BACKEND_FOLDER
     sudo apt install docker docker-compose -y
     docker-compose up -d
@@ -57,20 +57,21 @@ postgres(){
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' -y
     sudo apt update && sudo apt-get install postgresql postgresql-contrib -y
     sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password '$POSTGRES_PASSWORD';"
-    node
+    nodeFunction
 }
 
-node(){
+nodeFunction(){
     sudo apt install snapd
     sudo snap install node --classic --channel=12
+    yarnFunction
     backend
 }
 
-yarn(){
+yarnFunction(){
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     sudo apt install yarn -y
-    node
+    nodeFunction
 }
 
 gitFunction(){
