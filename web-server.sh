@@ -35,8 +35,8 @@ frontend(){
 }
 
 backend(){
-    cd ~/$APP_FOLDER/$BACKEND_FOLDER
     mongoFunction
+    cd ~/$APP_FOLDER/$BACKEND_FOLDER
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
