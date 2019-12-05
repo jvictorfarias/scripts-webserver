@@ -28,7 +28,7 @@ init(){
 }
 
 frontend(){
-    cd $APP_FOLDER/frontend/$FRONTEND_FOLDER
+    cd ~/$APP_FOLDER/frontend/$FRONTEND_FOLDER
     yarn install
     yarn start
     cd -
@@ -36,6 +36,7 @@ frontend(){
 
 backend(){
     cd ~/$APP_FOLDER/$BACKEND_FOLDER
+    mongoFunction
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
@@ -46,8 +47,10 @@ backend(){
 
 # In case of mongo
 mongoFunction(){
-    cd $BACKEND_FOLDER
+    sudo curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
     sudo apt install docker docker-compose -y
+    cd ~/$APP_FOLDER/$BACKEND_FOLDER
     docker-compose up -d
 }
 
