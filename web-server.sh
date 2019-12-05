@@ -14,6 +14,7 @@ menu(){
     FRONTEND_FOLDER=`dialog  --stdout --inputbox "Pasta da aplicação WEB " 0 0`
     PACKAGE_MANAGER=`dialog --stdout --title "Gerenciador de pacotes" --menu "Escolha o gerenciador:" \
     0 0 0 npm "Node Package Manager" yarn "Gerenciador do Facebook"`
+    POSTGRES_PASSWORD=`dialog  --stdout --inputbox "Senha do banco de dados PostgreSQL " 0 0`
     gitFunction
     
 }
@@ -24,7 +25,7 @@ init(){
 }
 
 frontend(){
-    cd $APP_FOLDER/$FRONTEND_FOLDER
+    cd $APP_FOLDER/frontend/$FRONTEND_FOLDER
     yarn install
     yarn start
     cd -
@@ -37,6 +38,7 @@ backend(){
     yarn sequelize db:migrate
     yarn start
     cd -
+    frontend
 }
 
 # In case of mongo
@@ -57,12 +59,14 @@ postgres(){
 node(){
     sudo apt install snapd
     sudo snap install node --classic --channel=12
+    backend
 }
 
 yarn(){
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     sudo apt install yarn -y
+    node
 }
 
 gitFunction(){
@@ -72,5 +76,5 @@ gitFunction(){
 }
 
 
-menu
+init
 
