@@ -7,6 +7,14 @@ FRONTEND_FOLDER=
 GIT_URL=
 APP_FOLDER=
 
+init(){
+    cd ~
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install dialog
+    
+    menu
+}
+
 menu(){
     dialog --msgbox "Instalador de Aplicação NodeJS/ReactJS" 0 0
     GIT_URL=`dialog  --stdout --inputbox "URL do GitHub da aplicação " 0 0`
@@ -19,20 +27,37 @@ menu(){
     
 }
 
-init(){
-    cd ~
-    sudo apt update && sudo apt upgrade -y
-    sudo apt install dialog
-    
-    menu
+gitFunction(){
+    sudo apt install git -y
+    git clone $GIT_URL
+    APP_FOLDER=`echo $GIT_URL | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1`
+    postgres
 }
 
-frontend(){
-    cd ~/$APP_FOLDER/frontend/$FRONTEND_FOLDER
-    yarn install
-    yarn start
-    cd -
+postgres(){
+    sudo apt-get install wget ca-certificates -y
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' -y
+    sudo apt update && sudo apt-get install postgresql postgresql-contrib -y
+    sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password '$POSTGRES_PASSWORD';"
+    nodeFunction
 }
+
+
+nodeFunction(){
+    sudo apt install snapd
+    sudo snap install node --classic --channel=12
+    yarnFunction
+    backend
+}
+
+
+yarnFunction(){
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    sudo apt install yarn -y
+}
+
 
 backend(){
     mongoFunction
@@ -53,36 +78,21 @@ mongoFunction(){
     sudo apt install docker docker-compose -y
     cd ~/$APP_FOLDER/$BACKEND_FOLDER
     docker-compose up -d
+    cd -
 }
 
-postgres(){
-    sudo apt-get install wget ca-certificates -y
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' -y
-    sudo apt update && sudo apt-get install postgresql postgresql-contrib -y
-    sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password '$POSTGRES_PASSWORD';"
-    nodeFunction
+
+
+
+frontend(){
+    cd ~/$APP_FOLDER/frontend/$FRONTEND_FOLDER
+    yarn install
+    yarn start
+    cd -
 }
 
-nodeFunction(){
-    sudo apt install snapd
-    sudo snap install node --classic --channel=12
-    yarnFunction
-    backend
-}
 
-yarnFunction(){
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    sudo apt install yarn -y
-}
 
-gitFunction(){
-    sudo apt install git -y
-    git clone $GIT_URL
-    APP_FOLDER=`echo $GIT_URL | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1`
-    postgres
-}
 
 
 init
