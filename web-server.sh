@@ -20,8 +20,6 @@ menu(){
     GIT_URL=`dialog  --stdout --inputbox "URL do GitHub da aplicação " 0 0`
     BACKEND_FOLDER=`dialog  --stdout --inputbox "Pasta da API " 0 0`
     FRONTEND_FOLDER=`dialog  --stdout --inputbox "Pasta da aplicação WEB " 0 0`
-    PACKAGE_MANAGER=`dialog --stdout --title "Gerenciador de pacotes" --menu "Escolha o gerenciador:" \
-    0 0 0 npm "Node Package Manager" yarn "Gerenciador do Facebook"`
     POSTGRES_PASSWORD=`dialog  --stdout --inputbox "Senha do banco de dados PostgreSQL " 0 0`
     gitFunction
     
@@ -62,6 +60,7 @@ yarnFunction(){
 backend(){
     mongoFunction
     cd ~/$APP_FOLDER/$BACKEND_FOLDER
+    docker-compose up -d &
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
@@ -76,12 +75,7 @@ mongoFunction(){
     sudo curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     sudo apt install docker docker-compose -y
-    cd ~/$APP_FOLDER/$BACKEND_FOLDER
-    docker-compose up -d
-    cd -
 }
-
-
 
 
 frontend(){
