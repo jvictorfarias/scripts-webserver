@@ -40,7 +40,7 @@ backend(){
     yarn install
     yarn sequelize db:create
     yarn sequelize db:migrate
-    screen -d -m yarn start
+    sudo nohup `sudo yarn start`
     cd -
     frontend
 }
